@@ -216,3 +216,12 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+
+# Grain Detection Project------------------
+
+# AFM experimental data
+*.gwy
+
+# Generated analysis results
+grain_analysis/
