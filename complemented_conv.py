@@ -27,6 +27,7 @@ file_name = "S07_A_10x10um_512p_043026.gwy"
 # file_name = "S07_A_10x10um_2048p_043026.gwy"
 
 # file_name = "S003A_2uA_5mM_pH0p85_20250725.gwy"
+# file_name = "S003B_10uB_5mM_pH0p85_20250731.gwy"
 
 # file_name = "S56_8-1_2.5um.gwy"
 # file_name = "S56_8-1_10um.gwy"
@@ -1002,6 +1003,7 @@ valid_grain_alpha = 0.25
 
 
 output_dir.mkdir(parents=True, exist_ok=True)
+plot_dpi = 600
 
 # PLOT 1 =======================================================================================================
 
@@ -1017,6 +1019,20 @@ axes[1].set_title("Detected grain boundaries")
 axes[1].axis("off")
 
 plt.tight_layout()
+
+plot1_file = (
+    output_dir
+    / f"{Path(file_name).stem}_AFM_and_boundaries.png"
+)
+
+fig.savefig(
+    plot1_file,
+    dpi=plot_dpi,
+    bbox_inches="tight",
+)
+
+print(f"Plot 1 exported to:\n{plot1_file}")
+
 plt.show()
 
 # PLOT 2 =======================================================================================================
@@ -1041,6 +1057,20 @@ ax.set_title(f"Valid grains over AFM\n Grains: {num_valid_grains}")
 ax.axis("off")
 
 plt.tight_layout()
+
+plot2_file = (
+    output_dir
+    / f"{Path(file_name).stem}_valid_grains_overlay.png"
+)
+
+fig.savefig(
+    plot2_file,
+    dpi=plot_dpi,
+    bbox_inches="tight",
+)
+
+print(f"Plot 2 exported to:\n{plot2_file}")
+
 plt.show()
 
 # PLOT 3 =======================================================================================================
@@ -1058,11 +1088,36 @@ ax.axis("off")
 
 plt.tight_layout()
 
-# Export binary mask --------------------------------------------------------------------------------------------------------------
+# Export complete Plot 3
+plot3_file = (
+    output_dir
+    / f"{Path(file_name).stem}_binary_mask_plot.png"
+)
 
-mask_output_file = (output_dir / f"{Path(file_name).stem}_grain_mask.png")
+fig.savefig(
+    plot3_file,
+    dpi=plot_dpi,
+    bbox_inches="tight",
+)
 
-plt.imsave(mask_output_file, binary_export_mask, cmap="gray", vmin=0, vmax=255)
-print(f"Binary grain mask exported to:\n", f"{mask_output_file}")
+print(f"Plot 3 exported to:\n{plot3_file}")
+
+
+# Export raw binary mask
+
+mask_output_file = (
+    output_dir
+    / f"{Path(file_name).stem}_grain_mask.png"
+)
+
+plt.imsave(
+    mask_output_file,
+    binary_export_mask,
+    cmap="gray",
+    vmin=0,
+    vmax=255,
+)
+
+print(f"Binary grain mask exported to:\n{mask_output_file}")
+
 plt.show()
-
