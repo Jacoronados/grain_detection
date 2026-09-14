@@ -4,11 +4,9 @@ import gwyfile
 import numpy as np
 import matplotlib.pyplot as plt
 import streamlit as st
-import plotly.graph_objects as go
 import pandas as pd
 
 from scipy.ndimage import convolve, label
-from plotly.subplots import make_subplots
 from skimage.morphology import thin, medial_axis
 from skimage.measure import regionprops, find_contours
 from io import BytesIO
@@ -579,13 +577,28 @@ def calculate_grain_perimeter(grain_mask, pixel_size_x_nm, pixel_size_y_nm):
 
 # APP ==================================================================================================
 
+st.set_page_config(
+    page_title="AFM Grain Analysis",
+    layout="wide",
+)
+
 st.title("AFM Grain Analysis")
 
 st.write("Web interface for AFM grain detection and statistical analysis.")
 
-# UPLOAD AFM FILE =============================================================================================
+# AFM INPUT AND PREVIEW ========================================================================================
 
-uploaded_file = st.file_uploader("Upload an AFM file", type=["gwy"])
+input_col, image_col = st.columns(
+    [1, 1.5],
+    vertical_alignment="top",
+)
+
+with input_col:
+
+    uploaded_file = st.file_uploader(
+        "Upload an AFM file",
+        type=["gwy"],
+    )
 
 # LOAD AFM DATA ================================================================================================
 
@@ -606,7 +619,9 @@ if uploaded_file is not None:
 
         channel_names = list(data_fields.keys())
 
-        selected_channel = st.selectbox("Select AFM channel", channel_names)
+        with input_col:
+
+            selected_channel = st.selectbox("Select AFM Channel", channel_names)
 
         # LOAD SELECTED CHANNEL ----------------------------------------------------------------------------------
 
@@ -618,79 +633,133 @@ if uploaded_file is not None:
         x_size_m = height_field.xreal
         y_size_m = height_field.yreal
 
+        # DISPLAY BASIC INFORMATION ----------------------------------------------------------------------------------
+
+        with  input_col:
+            st.write("Matrix shape:", height_nm.shape)
+            st.write("Physical size:", f"{x_size_m * 1e6:.2f} µm × {y_size_m * 1e6:.2f} µm")
+            st.write("Height range:", f"{height_nm.min():.2f} to {height_nm.max():.2f} nm")
+
         # DISPLAY AFM IMAGE ----------------------------------------------------------------------------------
 
-        fig, ax = plt.subplots(figsize=(6, 6))
+        fig, ax = plt.subplots(figsize=(3.5, 3.5))
 
         image = ax.imshow(height_nm, cmap="viridis", origin="upper")
 
-        ax.set_title(selected_channel)
+        # ax.set_title(selected_channel)
         ax.axis("off")
 
         fig.colorbar(image, ax=ax, label="Height (nm)", fraction=0.046, pad=0.04)
 
-        st.pyplot(fig)
+        with image_col:
+            st.pyplot(fig, use_container_width=False)
 
         plt.close(fig)
 
-        # DISPLAY BASIC INFORMATION ----------------------------------------------------------------------------------
 
-        st.write("Matrix shape:", height_nm.shape)
-        st.write("Physical size:", f"{x_size_m * 1e6:.2f} µm × {y_size_m * 1e6:.2f} µm")
-        st.write("Height range:", f"{height_nm.min():.2f} to {height_nm.max():.2f} nm")
-
-        # SETTINGS ----------------------------------------------------------------------------------
+        # SETTINGS ==============================================================================================
 
         st.subheader("Detection settings")
 
-        threshold_sensitivity_1 = st.number_input(
-            "3×3 threshold sensitivity",
-            min_value=0.0,
-            value=0.15,
-            step=0.01,
+        settings_col, mask_col = st.columns(
+            [1.2, 1],
+            vertical_alignment="top",
         )
 
-        threshold_sensitivity_2 = st.number_input(
-            "9×9 threshold sensitivity",
-            min_value=0.0,
-            value=0.20,
-            step=0.01,
-        )
 
-        min_component_size_1 = st.number_input(
-            "3×3 minimum component size",
-            min_value=0,
-            value=0,
-            step=1,
-        )
+        # DETECTION PARAMETERS ----------------------------------------------------------------------------------
 
-        min_component_size_2 = st.number_input(
-            "9×9 minimum component size",
-            min_value=0,
-            value=50,
-            step=1,
-        )
+        with settings_col:
 
-        endpoint_trace_steps = st.number_input(
-            "Endpoint trace steps",
-            min_value=1,
-            value=4,
-            step=1,
-        )
+            process_3x3_col, process_9x9_col = st.columns(2)
 
-        max_complement_steps = st.number_input(
-            "Maximum complement steps",
-            min_value=1,
-            value=10,
-            step=1,
-        )
+            # 3x3 PROCESSING ------------------------------------------------------------------------------------
 
-        min_cycle_size = st.number_input(
-            "Minimum cycle size",
-            min_value=0,
-            value=10,
-            step=1,
-        )
+            with process_3x3_col:
+
+                st.markdown("#### 3×3 processing")
+
+                threshold_sensitivity_1 = st.number_input(
+                    "Threshold sensitivity",
+                    min_value=0.0,
+                    value=0.15,
+                    step=0.01,
+                    key="threshold_sensitivity_1",
+                )
+
+                min_component_size_1 = st.number_input(
+                    "Minimum component size",
+                    min_value=0,
+                    value=0,
+                    step=1,
+                    key="min_component_size_1",
+                )
+
+
+            # 9x9 PROCESSING ------------------------------------------------------------------------------------
+
+            with process_9x9_col:
+
+                st.markdown("#### 9×9 processing")
+
+                threshold_sensitivity_2 = st.number_input(
+                    "Threshold sensitivity",
+                    min_value=0.0,
+                    value=0.20,
+                    step=0.01,
+                    key="threshold_sensitivity_2",
+                )
+
+                min_component_size_2 = st.number_input(
+                    "Minimum component size",
+                    min_value=0,
+                    value=50,
+                    step=1,
+                    key="min_component_size_2",
+                )
+
+
+            # RECONSTRUCTION AND CLEANING -----------------------------------------------------------------------
+
+            st.markdown("#### Reconstruction and cleaning")
+
+            reconstruction_col1, reconstruction_col2, reconstruction_col3 = st.columns(3)
+
+            with reconstruction_col1:
+
+                endpoint_trace_steps = st.number_input(
+                    "Endpoint trace steps",
+                    min_value=1,
+                    value=4,
+                    step=1,
+                )
+
+            with reconstruction_col2:
+
+                max_complement_steps = st.number_input(
+                    "Maximum complement steps",
+                    min_value=1,
+                    value=10,
+                    step=1,
+                )
+
+            with reconstruction_col3:
+
+                min_cycle_size = st.number_input(
+                    "Minimum cycle size",
+                    min_value=0,
+                    value=10,
+                    step=1,
+                )
+
+
+        # BINARY MASK PLACEHOLDER ----------------------------------------------------------------------------------
+
+        with mask_col:
+
+            st.markdown("#### Binary mask")
+
+            mask_placeholder = st.empty()
 
         # CONVOLUTION ----------------------------------------------------------------------------------
 
@@ -823,6 +892,22 @@ if uploaded_file is not None:
         skeleton_cycle_filtered, skeleton_cycle_filtered_bool = remove_small_components(skeleton_bool_cycle_cleaned.astype(np.uint8), min_size=min_cycle_size)
 
         final_mask = skeleton_cycle_filtered.astype(np.uint8)
+
+        # UPDATE BINARY MASK PREVIEW ----------------------------------------------------------------------------------
+
+        fig_final_mask, ax = plt.subplots(figsize=(4.5, 4.5))
+
+        ax.imshow(final_mask, cmap="gray_r", origin="upper")
+
+        # ax.set_title(f"Final boundary mask\nMinimum cycle size = {min_cycle_size}")
+
+        ax.axis("off")
+
+        plt.tight_layout()
+
+        mask_placeholder.pyplot(fig_final_mask, use_container_width=False)
+
+        plt.close(fig_final_mask)
 
         # GRAIN IDENTIFICATION ----------------------------------------------------------------------------------
 
@@ -999,182 +1084,121 @@ if uploaded_file is not None:
                         sdr_percent,
                 }
             )
+
         # CREATE DATAFRAME ----------------------------------------------------------------------------------
 
         grain_statistics_df = pd.DataFrame(grain_statistics)
 
-        # DISPLAY STATISTICAL RESULTS ----------------------------------------------------------------------------------
+        # DISPLAY FINAL ANALYSIS =======================================================================================
 
-        st.subheader("Grain statistics table")
-        st.write(f"Total grains analyzed: {len(grain_statistics_df)}")
-        st.dataframe(grain_statistics_df,use_container_width=True,)
+        st.subheader("Analysis results")
 
-        # PREPARE CSV DOWNLOAD ----------------------------------------------------------------------------------
+        grains_col, statistics_col = st.columns([1, 1.5], vertical_alignment="top")
 
-        csv_data = grain_statistics_df.to_csv(index=False).encode("utf-8")
+        # VALID GRAINS ------------------------------------------------------------------------------------------------
 
-        st.download_button(
-            label="Download grain statistics CSV",
-            data=csv_data,
-            file_name=f"{os.path.splitext(uploaded_file.name)[0]}_grain_statistics.csv",
-            mime="text/csv",
-        )
+        with grains_col:
 
-        # PREPARE BINARY MASK DOWNLOAD -----------------------------------------------------------------------
+            st.markdown("#### Detected grains")
 
-        mask_buffer = BytesIO()
+            st.write(f"Complete grains: {num_valid_grains}")
 
-        plt.imsave(
-            mask_buffer,
-            binary_export_mask,
-            cmap="gray",
-            vmin=0,
-            vmax=255,
-            format="png",
-        )
+            st.write(f"Border grains removed: {len(border_labels)}")
 
-        mask_buffer.seek(0)
+            fig_grains, ax = plt.subplots(figsize=(5, 5))
 
-        st.download_button(
-            label="Download grain mask PNG",
-            data=mask_buffer,
-            file_name=f"{os.path.splitext(uploaded_file.name)[0]}_grain_mask.png",
-            mime="image/png",
-        )
+            ax.imshow(
+                height_nm,
+                cmap="viridis",
+                origin="upper",
+            )
 
-        # DISPLAY FILTERING RESULTS ----------------------------------------------------------------------------------
+            ax.imshow(
+                np.ma.masked_where(
+                    ~valid_grains_mask,
+                    valid_grains_mask,
+                ),
+                cmap="gray",
+                alpha=0.30,
+                origin="upper",
+            )
 
-        st.subheader("Filtering results")
+            # ax.set_title(f"Detected complete grains\nGrains = {num_valid_grains}")
+            ax.axis("off")
 
-        fig_filter, axes = plt.subplots(2, 2, figsize=(10, 10))
+            plt.tight_layout()
 
-        axes[0, 0].imshow(thresholded_bool1, cmap="gray_r", origin="upper")
-        axes[0, 0].set_title(f"3×3 threshold mask\nThreshold = {thresholds1[0]:.3f}")
-        axes[0, 0].axis("off")
+            st.pyplot(
+                fig_grains,
+                use_container_width=True,
+            )
 
-        axes[0, 1].imshow(thresholded_bool2, cmap="gray_r", origin="upper")
-        axes[0, 1].set_title(f"9×9 threshold mask\nThreshold = {thresholds2[0]:.3f}")
-        axes[0, 1].axis("off")
+            plt.close(fig_grains)
 
-        axes[1, 0].imshow(thresholded_filtered_bool1, cmap="gray_r", origin="upper")
-        axes[1, 0].set_title(f"3×3 filtered mask\nMin size = {min_component_size_1}")
-        axes[1, 0].axis("off")
+            # GRAIN STATISTICS --------------------------------------------------------------------------------------------
 
-        axes[1, 1].imshow(thresholded_filtered_bool2, cmap="gray_r", origin="upper")
-        axes[1, 1].set_title(f"9×9 filtered mask\nMin size = {min_component_size_2}")
-        axes[1, 1].axis("off")
+            with statistics_col:
 
-        plt.tight_layout()
-        st.pyplot(fig_filter)
-        plt.close(fig_filter)
+                st.markdown("#### Grain statistics")
 
-        # DISPLAY SKELETON RESULTS ----------------------------------------------------------------------------------
+                st.write(
+                    f"Total grains analyzed: {len(grain_statistics_df)}"
+                )
 
-        st.subheader("Skeletonization results")
+                st.dataframe(
+                    grain_statistics_df,
+                    use_container_width=True,
+                    height=500,
+                )
 
-        fig_skeleton, axes = plt.subplots(1, 2, figsize=(10, 5), sharex=True, sharey=True)
+                # DOWNLOAD RESULTS =============================================================================================
 
-        axes[0].imshow(skeleton_bool1, cmap="gray_r", origin="upper")
-        axes[0].set_title("3×3 skeleton")
-        axes[0].axis("off")
+                st.subheader("Download results")
 
-        axes[1].imshow(skeleton_bool2, cmap="gray_r", origin="upper")
-        axes[1].set_title("9×9 skeleton")
-        axes[1].axis("off")
-
-        plt.tight_layout()
-        st.pyplot(fig_skeleton)
-        plt.close(fig_skeleton)
-
-        # DISPLAY ENDPOINTS ----------------------------------------------------------------------------------
-
-        st.subheader("Endpoint detection")
-
-        fig_endpoints, ax = plt.subplots(figsize=(7, 7))
-
-        ax.imshow(skeleton_bool2, cmap="gray_r",origin="upper")
-
-        if len(endpoint_coords) > 0:
-
-            ax.scatter(endpoint_coords[:, 1], endpoint_coords[:, 0], s=12, c="red")
-
-        ax.set_title(f"9×9 skeleton endpoints\nEndpoints = {num_endpoints}")
-        ax.axis("off")
-
-        plt.tight_layout()
-        st.pyplot(fig_endpoints)
-        plt.close(fig_endpoints)
-
-        # DISPLAY COMPLEMENTATION ----------------------------------------------------------------------------------
-
-        st.subheader("Skeleton complementation")
-
-        st.write(f"Pixels added from 3×3 skeleton: {num_added_pixels}")
-
-        fig_complemented, axes = plt.subplots(1, 2, figsize=(10, 5), sharex=True, sharey=True)
-
-        axes[0].imshow(skeleton_bool2, cmap="gray_r", origin="upper")
-        axes[0].set_title("Original 9×9 skeleton")
-        axes[0].axis("off")
-
-        axes[1].imshow(skeleton_bool_complemented, cmap="gray_r", origin="upper")
-        axes[1].set_title(f"Complemented skeleton\nAdded pixels = {num_added_pixels}")
-        axes[1].axis("off")
-
-        plt.tight_layout()
-        st.pyplot(fig_complemented)
-        plt.close(fig_complemented)
-
-        # DISPLAY CYCLE STRUCTURE ----------------------------------------------------------------------------------
-        
-        st.subheader("Cycle structure")
-
-        fig_cycle, axes = plt.subplots(1, 2, figsize=(10, 5), sharex=True, sharey=True)
-
-        axes[0].imshow(skeleton_bool_complemented, cmap="gray_r", origin="upper")
-        axes[0].set_title("Complemented skeleton")
-        axes[0].axis("off")
-
-        axes[1].imshow(skeleton_bool_cycle_cleaned, cmap="gray_r", origin="upper")
-        axes[1].set_title(f"Closed-cycle structure\nBridges removed = {len(bridges)}")
-        axes[1].axis("off")
-
-        plt.tight_layout()
-        st.pyplot(fig_cycle)
-        plt.close(fig_cycle)
-
-        # DISPLAY FINAL MASK ----------------------------------------------------------------------------------
-
-        st.subheader("Final grain-boundary mask")
-
-        fig_final_mask, ax = plt.subplots(figsize=(7, 7))
-
-        ax.imshow(final_mask, cmap="gray_r", origin="upper")
-        ax.set_title(f"Final boundary mask\nMinimum cycle size = {min_cycle_size}")
-        ax.axis("off")
-
-        plt.tight_layout()
-        st.pyplot(fig_final_mask)
-        plt.close(fig_final_mask)
-
-        # DISPLAY VALID GRAINS ----------------------------------------------------------------------------------
-
-        st.subheader("Detected grains")
-        st.write(f"Number of complete grains: {num_valid_grains}")
-        st.write(f"Grains removed at image borders: {len(border_labels)}")
-
-        fig_grains, ax = plt.subplots(figsize=(7, 7))
-
-        ax.imshow(height_nm, cmap="viridis", origin="upper")
-        ax.imshow(np.ma.masked_where(~valid_grains_mask, valid_grains_mask,), cmap="gray", alpha=0.30, origin="upper")
-        ax.set_title(f"Detected complete grains\nGrains = {num_valid_grains}")
-        ax.axis("off")
-
-        plt.tight_layout()
-        st.pyplot(fig_grains)
-        plt.close(fig_grains)
+                download_col1, download_col2 = st.columns(2)
 
 
+                # CSV DOWNLOAD ------------------------------------------------------------------------------------------------
+
+                csv_data = grain_statistics_df.to_csv(
+                    index=False
+                ).encode("utf-8")
+
+                with download_col1:
+
+                    st.download_button(
+                        label="Download grain statistics CSV",
+                        data=csv_data,
+                        file_name=f"{os.path.splitext(uploaded_file.name)[0]}_grain_statistics.csv",
+                        mime="text/csv",
+                        use_container_width=True,
+                    )
+
+
+                # BINARY MASK DOWNLOAD ----------------------------------------------------------------------------------------
+
+                mask_buffer = BytesIO()
+
+                plt.imsave(
+                    mask_buffer,
+                    binary_export_mask,
+                    cmap="gray",
+                    vmin=0,
+                    vmax=255,
+                    format="png",
+                )
+
+                mask_buffer.seek(0)
+
+                with download_col2:
+
+                    st.download_button(
+                        label="Download binary grain mask PNG",
+                        data=mask_buffer,
+                        file_name=f"{os.path.splitext(uploaded_file.name)[0]}_grain_mask.png",
+                        mime="image/png",
+                        use_container_width=True,
+                    )
 
     finally:
 
