@@ -586,6 +586,11 @@ st.title("AFM Grain Analysis")
 
 st.write("Web interface for AFM grain detection and statistical analysis.")
 
+st.link_button(
+    "Documentation",
+    "https://jacoronados.github.io/grain_detection/",
+)
+
 # AFM INPUT AND PREVIEW ========================================================================================
 
 input_col, image_col = st.columns(
