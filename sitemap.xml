@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://Jacoronados.github.io/grain_detection/user-guide.html</loc>
+    <lastmod>2026-10-05T18:22:30.102Z</lastmod>
+  </url>
+  <url>
     <loc>https://Jacoronados.github.io/grain_detection/index.html</loc>
-    <lastmod>2026-10-05T17:34:08.249Z</lastmod>
+    <lastmod>2026-10-05T21:20:15.816Z</lastmod>
+  </url>
+  <url>
+    <loc>https://Jacoronados.github.io/grain_detection/grain-detection.html</loc>
+    <lastmod>2026-10-05T17:44:18.136Z</lastmod>
+  </url>
+  <url>
+    <loc>https://Jacoronados.github.io/grain_detection/statistical-analysis.html</loc>
+    <lastmod>2026-10-05T17:45:33.760Z</lastmod>
   </url>
 </urlset>

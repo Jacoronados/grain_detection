@@ -1,9 +1,51 @@
 [
   {
+    "objectID": "user-guide.html",
+    "href": "user-guide.html",
+    "title": "User Guide",
+    "section": "",
+    "text": "This guide provides the basic instructions for using the AFM Grain Analysis web application. The application allows users to upload AFM data, select the appropriate data channel, adjust the grain-detection parameters, review the detected grains, and download the resulting grain mask and statistical analysis."
+  },
+  {
+    "objectID": "user-guide.html#processing",
+    "href": "user-guide.html#processing",
+    "title": "User Guide",
+    "section": "3×3 Processing",
+    "text": "3×3 Processing\nThreshold sensitivity\nControls the selectivity of the initial boundary detection performed using the 3×3 processing path.\nMinimum component size\nRemoves small detected components below the specified size."
+  },
+  {
+    "objectID": "user-guide.html#processing-1",
+    "href": "user-guide.html#processing-1",
+    "title": "User Guide",
+    "section": "9×9 Processing",
+    "text": "9×9 Processing\nThreshold sensitivity\nControls the selectivity of the initial boundary detection performed using the 9×9 processing path.\nMinimum component size\nRemoves small detected components below the specified size."
+  },
+  {
+    "objectID": "user-guide.html#reconstruction-and-cleaning",
+    "href": "user-guide.html#reconstruction-and-cleaning",
+    "title": "User Guide",
+    "section": "Reconstruction and Cleaning",
+    "text": "Reconstruction and Cleaning\nEndpoint trace steps\nControls the number of pixels used to estimate the direction of incomplete grain boundaries.\nMaximum complement steps\nControls the maximum distance over which the algorithm can extend an incomplete boundary using information from the complementary detection path.\nMinimum cycle size\nRemoves small closed structures below the specified size from the final grain-boundary mask."
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "AFM Grain Analysis",
     "section": "",
     "text": "Overview\nAFM Grain Analysis is a Python-based tool for grain boundary detection and quantitative grain analysis from Atomic Force Microscopy (AFM) images.\nThe analysis workflow includes:\n\nAFM data import\nMulti-scale Laplacian convolution\nAutomatic thresholding\nBinary mask filtering\nSkeletonization\nGrain boundary reconstruction\nGrain identification\nStatistical analysis\n\n\n\nWeb Application\nThe grain analysis tool is available through the Streamlit web application.\n\n\nDocumentation\nThis documentation describes the grain detection methodology, adjustable parameters, statistical analysis, and usage of the web application."
+  },
+  {
+    "objectID": "grain-detection.html",
+    "href": "grain-detection.html",
+    "title": "Methodology",
+    "section": "",
+    "text": "Grain Detection Workflow\nThe grain detection method processes AFM height data through a sequence of image-processing steps.\nThe main stages are:\n\nAFM data import\nLaplacian convolution\nAutomatic thresholding\nSmall-component filtering\nSkeletonization\nEndpoint detection\nSkeleton complementation\nBridge removal\nClosed-cycle filtering\nGrain identification\nBorder-grain removal"
+  },
+  {
+    "objectID": "statistical-analysis.html",
+    "href": "statistical-analysis.html",
+    "title": "Statistical Analysis",
+    "section": "",
+    "text": "Grain Statistics\nThe program calculates geometric and topographic properties for each detected grain."
   }
 ]

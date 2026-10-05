@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Jorge Coronado">
 
-<title>AFM Grain Analysis</title>
+<title>User Guide – AFM Grain Analysis</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -96,11 +95,11 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="./index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./user-guide.html"> 
+    <a class="nav-link active" href="./user-guide.html" aria-current="page"> 
 <span class="menu-text">User Guide</span></a>
   </li>  
   <li class="nav-item">
@@ -128,8 +127,18 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
-  <li><a href="#web-application" id="toc-web-application" class="nav-link" data-scroll-target="#web-application">Web Application</a></li>
-  <li><a href="#documentation" id="toc-documentation" class="nav-link" data-scroll-target="#documentation">Documentation</a></li>
+  <li><a href="#accessing-the-application" id="toc-accessing-the-application" class="nav-link" data-scroll-target="#accessing-the-application">Accessing the Application</a></li>
+  <li><a href="#uploading-afm-data" id="toc-uploading-afm-data" class="nav-link" data-scroll-target="#uploading-afm-data">Uploading AFM Data</a></li>
+  <li><a href="#selecting-the-afm-channel" id="toc-selecting-the-afm-channel" class="nav-link" data-scroll-target="#selecting-the-afm-channel">Selecting the AFM Channel</a></li>
+  <li><a href="#detection-settings" id="toc-detection-settings" class="nav-link" data-scroll-target="#detection-settings">Detection Settings</a>
+  <ul class="collapse">
+  <li><a href="#processing" id="toc-processing" class="nav-link" data-scroll-target="#processing">3×3 Processing</a></li>
+  <li><a href="#processing-1" id="toc-processing-1" class="nav-link" data-scroll-target="#processing-1">9×9 Processing</a></li>
+  <li><a href="#reconstruction-and-cleaning" id="toc-reconstruction-and-cleaning" class="nav-link" data-scroll-target="#reconstruction-and-cleaning">Reconstruction and Cleaning</a></li>
+  </ul></li>
+  <li><a href="#reviewing-the-binary-mask" id="toc-reviewing-the-binary-mask" class="nav-link" data-scroll-target="#reviewing-the-binary-mask">Reviewing the Binary Mask</a></li>
+  <li><a href="#reviewing-the-analysis-results" id="toc-reviewing-the-analysis-results" class="nav-link" data-scroll-target="#reviewing-the-analysis-results">Reviewing the Analysis Results</a></li>
+  <li><a href="#downloading-results" id="toc-downloading-results" class="nav-link" data-scroll-target="#downloading-results">Downloading Results</a></li>
   </ul>
 </nav>
     </div>
@@ -138,20 +147,13 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">AFM Grain Analysis</h1>
-<p class="subtitle lead">Documentation</p>
+<h1 class="title">User Guide</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Jorge Coronado </p>
-          </div>
-  </div>
     
   
     
@@ -164,26 +166,85 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="overview" class="level1">
 <h1>Overview</h1>
-<p>AFM Grain Analysis is a Python-based tool for grain boundary detection and quantitative grain analysis from Atomic Force Microscopy (AFM) images.</p>
-<p>The analysis workflow includes:</p>
-<ol type="1">
-<li>AFM data import</li>
-<li>Multi-scale Laplacian convolution</li>
-<li>Automatic thresholding</li>
-<li>Binary mask filtering</li>
-<li>Skeletonization</li>
-<li>Grain boundary reconstruction</li>
-<li>Grain identification</li>
-<li>Statistical analysis</li>
-</ol>
+<p>This guide provides the basic instructions for using the AFM Grain Analysis web application. The application allows users to upload AFM data, select the appropriate data channel, adjust the grain-detection parameters, review the detected grains, and download the resulting grain mask and statistical analysis.</p>
 </section>
-<section id="web-application" class="level1">
-<h1>Web Application</h1>
-<p>The grain analysis tool is available through the Streamlit web application.</p>
+<section id="accessing-the-application" class="level1">
+<h1>Accessing the Application</h1>
+<p>The AFM Grain Analysis tool is available online through the Streamlit web application:</p>
+<p><a href="https://ichilab-grain-analysis.streamlit.app/">Open AFM Grain Analysis</a></p>
+<p>No local installation of Python or additional software is required to use the web application.</p>
 </section>
-<section id="documentation" class="level1">
-<h1>Documentation</h1>
-<p>This documentation describes the grain detection methodology, adjustable parameters, statistical analysis, and usage of the web application.</p>
+<section id="uploading-afm-data" class="level1">
+<h1>Uploading AFM Data</h1>
+<p>Use <strong>Upload an AFM file</strong> to select the AFM file to be analyzed.</p>
+<p><img src="images/upload-file.jpg" class="img-fluid"></p>
+<p>The application currently accepts files in the Gwyddion <code>.gwy</code> format.</p>
+<p>After the file is uploaded, the application will display the available AFM data channels.</p>
+<p><img src="images/select-channel.jpg" class="img-fluid"></p>
+</section>
+<section id="selecting-the-afm-channel" class="level1">
+<h1>Selecting the AFM Channel</h1>
+<p>Use <strong>Select AFM Channel</strong> to choose the data channel that will be used for the grain analysis.</p>
+<p><img src="images/channel-list.jpg" class="img-fluid"></p>
+<p>After selecting a channel, the application displays:</p>
+<ul>
+<li>The dimensions of the data matrix</li>
+<li>The physical dimensions of the scanned area</li>
+<li>The height range</li>
+<li>A preview of the selected AFM image</li>
+</ul>
+<p><img src="images/afm-preview.jpg" class="img-fluid"></p>
+<p>Verify that the correct channel has been selected before adjusting the grain-detection parameters.</p>
+</section>
+<section id="detection-settings" class="level1">
+<h1>Detection Settings</h1>
+<p>The <strong>Detection settings</strong> section contains the parameters used to control grain-boundary detection.</p>
+<p>The parameters are divided into three groups:</p>
+<section id="processing" class="level2">
+<h2 class="anchored" data-anchor-id="processing">3×3 Processing</h2>
+<p><strong>Threshold sensitivity</strong></p>
+<p>Controls the selectivity of the initial boundary detection performed using the 3×3 processing path.</p>
+<p><strong>Minimum component size</strong></p>
+<p>Removes small detected components below the specified size.</p>
+</section>
+<section id="processing-1" class="level2">
+<h2 class="anchored" data-anchor-id="processing-1">9×9 Processing</h2>
+<p><strong>Threshold sensitivity</strong></p>
+<p>Controls the selectivity of the initial boundary detection performed using the 9×9 processing path.</p>
+<p><strong>Minimum component size</strong></p>
+<p>Removes small detected components below the specified size.</p>
+</section>
+<section id="reconstruction-and-cleaning" class="level2">
+<h2 class="anchored" data-anchor-id="reconstruction-and-cleaning">Reconstruction and Cleaning</h2>
+<p><strong>Endpoint trace steps</strong></p>
+<p>Controls the number of pixels used to estimate the direction of incomplete grain boundaries.</p>
+<p><strong>Maximum complement steps</strong></p>
+<p>Controls the maximum distance over which the algorithm can extend an incomplete boundary using information from the complementary detection path.</p>
+<p><strong>Minimum cycle size</strong></p>
+<p>Removes small closed structures below the specified size from the final grain-boundary mask.</p>
+</section>
+</section>
+<section id="reviewing-the-binary-mask" class="level1">
+<h1>Reviewing the Binary Mask</h1>
+<p>The <strong>Binary mask</strong> preview updates when the detection parameters are changed.</p>
+<p>Use this preview to evaluate whether the detected boundaries adequately represent the grain structure of the AFM image.</p>
+<p>Adjust the detection parameters as necessary before proceeding to the final results.</p>
+</section>
+<section id="reviewing-the-analysis-results" class="level1">
+<h1>Reviewing the Analysis Results</h1>
+<p>The <strong>Analysis results</strong> section displays the grains identified from the final grain-boundary mask.</p>
+<p>Grains that intersect the image borders are excluded from the final analysis because their complete dimensions cannot be determined from the available image.</p>
+<p>The application also displays a table containing the calculated properties for each valid grain.</p>
+</section>
+<section id="downloading-results" class="level1">
+<h1>Downloading Results</h1>
+<p>After reviewing the grain detection and statistical results, the final outputs can be downloaded from the <strong>Download results</strong> section.</p>
+<p>The available outputs are:</p>
+<ul>
+<li><strong>Grain statistics CSV:</strong> Contains the calculated properties for each analyzed grain.</li>
+<li><strong>Binary grain mask PNG:</strong> Contains the final binary mask of the valid detected grains.</li>
+</ul>
+<p>The downloaded files use the original AFM filename as the base of the output filename.</p>
 
 
 </section>

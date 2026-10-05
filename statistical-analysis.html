@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Jorge Coronado">
 
-<title>AFM Grain Analysis</title>
+<title>Statistical Analysis – AFM Grain Analysis</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -96,7 +95,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="./index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
@@ -108,7 +107,7 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Grain Detection Methodology</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./statistical-analysis.html"> 
+    <a class="nav-link active" href="./statistical-analysis.html" aria-current="page"> 
 <span class="menu-text">Statistical Analysis Methodology</span></a>
   </li>  
 </ul>
@@ -127,9 +126,7 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
-  <li><a href="#web-application" id="toc-web-application" class="nav-link" data-scroll-target="#web-application">Web Application</a></li>
-  <li><a href="#documentation" id="toc-documentation" class="nav-link" data-scroll-target="#documentation">Documentation</a></li>
+  <li><a href="#grain-statistics" id="toc-grain-statistics" class="nav-link active" data-scroll-target="#grain-statistics">Grain Statistics</a></li>
   </ul>
 </nav>
     </div>
@@ -138,20 +135,13 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">AFM Grain Analysis</h1>
-<p class="subtitle lead">Documentation</p>
+<h1 class="title">Statistical Analysis</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Jorge Coronado </p>
-          </div>
-  </div>
     
   
     
@@ -162,28 +152,9 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="overview" class="level1">
-<h1>Overview</h1>
-<p>AFM Grain Analysis is a Python-based tool for grain boundary detection and quantitative grain analysis from Atomic Force Microscopy (AFM) images.</p>
-<p>The analysis workflow includes:</p>
-<ol type="1">
-<li>AFM data import</li>
-<li>Multi-scale Laplacian convolution</li>
-<li>Automatic thresholding</li>
-<li>Binary mask filtering</li>
-<li>Skeletonization</li>
-<li>Grain boundary reconstruction</li>
-<li>Grain identification</li>
-<li>Statistical analysis</li>
-</ol>
-</section>
-<section id="web-application" class="level1">
-<h1>Web Application</h1>
-<p>The grain analysis tool is available through the Streamlit web application.</p>
-</section>
-<section id="documentation" class="level1">
-<h1>Documentation</h1>
-<p>This documentation describes the grain detection methodology, adjustable parameters, statistical analysis, and usage of the web application.</p>
+<section id="grain-statistics" class="level1">
+<h1>Grain Statistics</h1>
+<p>The program calculates geometric and topographic properties for each detected grain.</p>
 
 
 </section>
