@@ -1,0 +1,21 @@
+---
+title: "Methodology"
+---
+
+# Grain Detection Workflow
+
+The grain detection method processes AFM height data through a sequence of image-processing steps.
+
+The main stages are:
+
+1. AFM data import
+2. Laplacian convolution
+3. Automatic thresholding
+4. Small-component filtering
+5. Skeletonization
+6. Endpoint detection
+7. Skeleton complementation
+8. Bridge removal
+9. Closed-cycle filtering
+10. Grain identification
+11. Border-grain removal

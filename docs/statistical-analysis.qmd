@@ -1,0 +1,7 @@
+---
+title: "Statistical Analysis"
+---
+
+# Grain Statistics
+
+The program calculates geometric and topographic properties for each detected grain.

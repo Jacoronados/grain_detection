@@ -225,3 +225,8 @@ __marimo__/
 
 # Generated analysis results
 grain_analysis/
+
+# Quarto generated files
+docs/_site/
+docs/.quarto/
+docs/*_files/

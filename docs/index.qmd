@@ -1,0 +1,29 @@
+---
+title: "AFM Grain Analysis"
+subtitle: "Documentation"
+author: "Jorge Coronado"
+format: html
+---
+
+# Overview
+
+AFM Grain Analysis is a Python-based tool for grain boundary detection and quantitative grain analysis from Atomic Force Microscopy (AFM) images.
+
+The analysis workflow includes:
+
+1. AFM data import
+2. Multi-scale Laplacian convolution
+3. Automatic thresholding
+4. Binary mask filtering
+5. Skeletonization
+6. Grain boundary reconstruction
+7. Grain identification
+8. Statistical analysis
+
+# Web Application
+
+The grain analysis tool is available through the Streamlit web application.
+
+# Documentation
+
+This documentation describes the grain detection methodology, adjustable parameters, statistical analysis, and usage of the web application.

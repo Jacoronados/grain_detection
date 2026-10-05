@@ -1,0 +1,21 @@
+project:
+  type: website
+
+website:
+  title: "AFM Grain Analysis"
+
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: user-guide.qmd
+        text: User Guide
+      - href: grain-detection.qmd
+        text: Grain Detection Methodology
+      - href: statistical-analysis.qmd
+        text: Statistical Analysis Methodology
+
+format:
+  html:
+    theme: cosmo
+    toc: true
