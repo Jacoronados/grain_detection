@@ -1,7 +1,0 @@
-streamlit
-numpy
-pandas
-matplotlib
-scipy
-scikit-image
-gwyfile
